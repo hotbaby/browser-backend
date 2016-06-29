@@ -57,15 +57,20 @@ class ServiceTrackerHandler(srvtracker.ServiceTracker.Iface):
         self.service_registry = service_registry
         
     def register_service(self, info):
-        logger.debug("Received register_service.")
+        logger.debug("Process register_service.")
         proxy = RegistryProxy(self.service_registry)
         return proxy.register_service(info)
     
     def heartbeat(self, msg):
-        logger.debug("Received heartbeat message.")
+        logger.debug("Process heartbeat.")
         proxy = HeartbeatProxy(self.heartbeat_queue)
         return proxy.heartbeat(msg)
     
+    def get_service(self, name):
+        logger.debug("Process get_service")
+        proxy = RegistryProxy(self.service_registry) 
+        return proxy.get_service(name)
+        
     def get_services(self):
         logger.debug("Received get_services.")
         #TODO

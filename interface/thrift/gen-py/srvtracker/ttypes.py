@@ -207,19 +207,25 @@ class ServiceProfile:
   Service Profile
 
   Attributes:
-   - info
    - id
+   - name
+   - host
+   - port
   """
 
   thrift_spec = (
     None, # 0
-    (1, TType.STRUCT, 'info', (ServiceRegistryInfo, ServiceRegistryInfo.thrift_spec), None, ), # 1
-    (2, TType.I32, 'id', None, None, ), # 2
+    (1, TType.I32, 'id', None, None, ), # 1
+    (2, TType.STRING, 'name', None, None, ), # 2
+    (3, TType.STRING, 'host', None, None, ), # 3
+    (4, TType.I16, 'port', None, None, ), # 4
   )
 
-  def __init__(self, info=None, id=None,):
-    self.info = info
+  def __init__(self, id=None, name=None, host=None, port=None,):
     self.id = id
+    self.name = name
+    self.host = host
+    self.port = port
 
   def read(self, iprot):
     if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
@@ -231,14 +237,23 @@ class ServiceProfile:
       if ftype == TType.STOP:
         break
       if fid == 1:
-        if ftype == TType.STRUCT:
-          self.info = ServiceRegistryInfo()
-          self.info.read(iprot)
+        if ftype == TType.I32:
+          self.id = iprot.readI32()
         else:
           iprot.skip(ftype)
       elif fid == 2:
-        if ftype == TType.I32:
-          self.id = iprot.readI32()
+        if ftype == TType.STRING:
+          self.name = iprot.readString()
+        else:
+          iprot.skip(ftype)
+      elif fid == 3:
+        if ftype == TType.STRING:
+          self.host = iprot.readString()
+        else:
+          iprot.skip(ftype)
+      elif fid == 4:
+        if ftype == TType.I16:
+          self.port = iprot.readI16()
         else:
           iprot.skip(ftype)
       else:
@@ -251,29 +266,43 @@ class ServiceProfile:
       oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
       return
     oprot.writeStructBegin('ServiceProfile')
-    if self.info is not None:
-      oprot.writeFieldBegin('info', TType.STRUCT, 1)
-      self.info.write(oprot)
-      oprot.writeFieldEnd()
     if self.id is not None:
-      oprot.writeFieldBegin('id', TType.I32, 2)
+      oprot.writeFieldBegin('id', TType.I32, 1)
       oprot.writeI32(self.id)
+      oprot.writeFieldEnd()
+    if self.name is not None:
+      oprot.writeFieldBegin('name', TType.STRING, 2)
+      oprot.writeString(self.name)
+      oprot.writeFieldEnd()
+    if self.host is not None:
+      oprot.writeFieldBegin('host', TType.STRING, 3)
+      oprot.writeString(self.host)
+      oprot.writeFieldEnd()
+    if self.port is not None:
+      oprot.writeFieldBegin('port', TType.I16, 4)
+      oprot.writeI16(self.port)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()
 
   def validate(self):
-    if self.info is None:
-      raise TProtocol.TProtocolException(message='Required field info is unset!')
     if self.id is None:
       raise TProtocol.TProtocolException(message='Required field id is unset!')
+    if self.name is None:
+      raise TProtocol.TProtocolException(message='Required field name is unset!')
+    if self.host is None:
+      raise TProtocol.TProtocolException(message='Required field host is unset!')
+    if self.port is None:
+      raise TProtocol.TProtocolException(message='Required field port is unset!')
     return
 
 
   def __hash__(self):
     value = 17
-    value = (value * 31) ^ hash(self.info)
     value = (value * 31) ^ hash(self.id)
+    value = (value * 31) ^ hash(self.name)
+    value = (value * 31) ^ hash(self.host)
+    value = (value * 31) ^ hash(self.port)
     return value
 
   def __repr__(self):

@@ -15,5 +15,10 @@ class Derived(Super):
         
         
 if __name__  == "__main__":
-    index = 1;
+    d = dict(name="hello")
+    if "name" in d:
+        print(d["name"])
+    else:
+        print(None)
+        
     

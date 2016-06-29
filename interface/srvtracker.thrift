@@ -73,8 +73,10 @@ struct ServiceRegistryResponse {
  * Service Profile
  */
 struct ServiceProfile {
-  1: required ServiceRegistryInfo info,
-  2: required i32 id,
+  1: required i32 id,
+  2: required string name,
+  3: required string host,
+  4: required i16 port,
 }
 
 /**
@@ -119,6 +121,13 @@ service ServiceTracker extends shared.Base {
    * 
    */
   HeartbeatResponse heartbeat(1: required HeartbeatMessage msg) throws (1:shared.InvalidRequestException ire),
+
+  /**
+   * Get service profile.
+   * @param name. The service name.
+   * @return. Return ServiceProfile if the service exist. Otherwise, ServiceProfile.id is -1 and all the ServiceProfile attributes is invalid.
+   */
+  ServiceProfile get_service(1: required string name) throws (1:shared.InvalidRequestException ire), 
 
   /**
    * Get all services info

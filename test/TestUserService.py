@@ -4,7 +4,7 @@ sys.path.insert(0, "../interface/thrift/gen-py")
 
 import logging
 import unittest
-from userservice import User
+from usr import User
 
 from thrift.transport import TSocket
 from thrift.transport import TTransport
@@ -18,7 +18,7 @@ class TestUserService(unittest.TestCase):
     """
     
     def setUp(self):
-        transport = TSocket.TSocket("localhost", 9000)
+        transport = TSocket.TSocket("localhost", 9001)
         transport = TTransport.TBufferedTransport(transport)
         protocol = TJSONProtocol.TJSONProtocol(transport)
         self.client = User.Client(protocol)

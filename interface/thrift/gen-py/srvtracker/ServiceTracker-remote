@@ -26,6 +26,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print('Functions:')
   print('  ServiceRegistryResponse register_service(ServiceRegistryInfo info)')
   print('  HeartbeatResponse heartbeat(HeartbeatMessage msg)')
+  print('  ServiceProfile get_service(string name)')
   print('   get_services()')
   print('')
   sys.exit(0)
@@ -94,6 +95,12 @@ elif cmd == 'heartbeat':
     print('heartbeat requires 1 args')
     sys.exit(1)
   pp.pprint(client.heartbeat(eval(args[0]),))
+
+elif cmd == 'get_service':
+  if len(args) != 1:
+    print('get_service requires 1 args')
+    sys.exit(1)
+  pp.pprint(client.get_service(args[0],))
 
 elif cmd == 'get_services':
   if len(args) != 0:
