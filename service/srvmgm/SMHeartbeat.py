@@ -53,10 +53,23 @@ class HeartbeatProxy(srvtracker.ServiceTracker.Iface):
     def __init__(self, msg_queue):
         self.msg_queue = msg_queue
         
+    def put_msg(self, msg):
+        if not isinstance(msg, srvtracker.ttypes.HeartbeatMessage):
+            logger.warn("heartbeat message format error.")
+            return False
+        else:
+            try:
+                self.msg_queue.put_nowait(msg)
+                ServiceManager.increase_semaphore()
+                return True
+            except Exception:
+                logger.warn("Put msg into HEARTBEAT_QUEUE error.")
+                return False
+
     def heartbeat(self, msg):
         if not isinstance(msg, srvtracker.ttypes.HeartbeatMessage):
             logger.warn("hesartbeat message format error.")
             return srvtracker.ttypes.HeartbeatResponse(result=-1)
         else:
-            HeartbeatServer.put_msg(self.msg_queue, msg)
+            self.put_msg(msg)
             return srvtracker.ttypes.HeartbeatResponse(result=0)

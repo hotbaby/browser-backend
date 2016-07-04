@@ -5,10 +5,11 @@ sys.path.insert(0, "../../rpc")
 import logging
 import multiprocessing
 
+import srvtracker
 from rpcthrift import ThriftRPCServer
 
 from service.srvmgm.SMServiceTrackerServer import ServiceTrackerRPCServer
-from service.srvmgm.SMHeartbeatServer import HeartbeatServer
+from service.srvmgm.SMHeartbeat import HeartbeatServer
 
 logger = logging.getLogger("__main__")
 
@@ -39,11 +40,20 @@ class ServiceManager(object):
     def prepare(self):
         self.heartbeat = HeartbeatServer(ServiceManager.HEARTBEAT_QUEUE)
         
+    def process_heartbeat_msg(self):
+        try:
+            msg = ServiceManager.HEARTBEAT_QUEUE.get_nowait()
+            if isinstance(msg, srvtracker.ttypes.HeartbeatMessage):
+                logger.debug("Process (service %d) heartbeat message." % msg.service_id)
+                pass #TODO process heartbeat message.
+        except Exception:
+            logger.info("Heartbeat queue is empty.")
+
     def run(self):
         self.start_rpc_server()
         while True:
             ServiceManager.SEMAPHORE.acquire()
-            self.heartbeat.process_heartbeat_message()
+            self.process_heartbeat_msg()
     
     def start_rpc_server(self):
         if self.rpc_server_process == None:

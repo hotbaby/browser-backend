@@ -10,8 +10,8 @@ import rpcthrift
 import srvtracker
 from rpcthrift.ThriftRPCServer import ServerType, ProtocolType
     
-from SMRegistryServer import RegistryProxy
-from SMHeartbeatServer import HeartbeatProxy
+from service.srvmgm.SMRegistry import RegistryProxy
+from service.srvmgm.SMHeartbeat import HeartbeatProxy
 
 logger = logging.getLogger("__main__")
 
